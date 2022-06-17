@@ -20,10 +20,29 @@ def getSig(path, data, secret):
 
 def kAuthReq(path, data = {}):
     data['nonce'] = str(int(1000*time.time()))
-
     auth_info = json_io.getJsonFile("auth.json")['kraken']
     headers = {}
     headers['API-Key'] = auth_info['key']
     headers['API-Sign'] = getSig(path, data, auth_info['secret'])
     return requests.post(API_URL + path, headers=headers, data=data)
 
+def kGetBalances():
+    return kAuthReq('/0/private/Balance').json()
+
+def kCreateMarketBuyOrder(buyAsset, sellAsset, amount):
+    data = {
+        "ordertype": "market",
+        "type": "buy",
+        "pair": buyAsset+sellAsset,
+        "volume": str(amount)
+        }
+    resp = kAuthReq('/0/private/AddOrder', data).json()
+    return resp
+
+def kWithdrawCrypto(name, amount, addressName):
+    data = {
+        "asset": name,
+        "key": addressName,
+        "amount": str(amount)
+        }
+    return kAuthReq('/0/private/Withdraw', data).json()

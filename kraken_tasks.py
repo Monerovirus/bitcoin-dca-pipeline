@@ -45,8 +45,9 @@ def kVerifyBalance(asset, requiredBalance, retryCount, waitSeconds):
         if 'Error' in result:
             return result
         balance = float(result)
+        logging.debug(f"Balance was {balance}.")
         if balance >= requiredBalance:
-            return True
+            return { "Balance" : balance }
         tryCount += 1
         time.sleep(waitSeconds)
     return {"Error": f"Could not verify balance was {requiredBalance} after {retryCount} tries.\n{result}"}

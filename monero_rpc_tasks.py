@@ -1,4 +1,4 @@
-import urllib.parse, requests, time, logging
+import urllib.parse, requests, time, logging, json
 import json_io
 from simplejson.errors import JSONDecodeError
 
@@ -17,9 +17,7 @@ def tryParseResponse(resp):
 def mPostRequest(data):
     data['jsonrpc'] = "2.0"
     data['id'] = "0"
-    headers = {}
-    headers['Content-Type'] = "application/json"
-    return requests.post(API_URL, headers=headers, data=data)
+    return requests.post(API_URL, data=json.dumps(data))
 
 def mGetBalances():
     data = {'method': "get_accounts"}
@@ -28,4 +26,3 @@ def mGetBalances():
         return resp
 
     return {"balance": resp['result']['total_balance'], "unlocked_balance": resp['result']['total_unlocked_balance']}
-

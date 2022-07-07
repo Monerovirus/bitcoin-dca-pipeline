@@ -21,10 +21,11 @@ def mPostRequest(data):
     headers['Content-Type'] = "application/json"
     return requests.post(API_URL, headers=headers, data=data)
 
-def mGetBalances(asset):
+def mGetBalances():
     data = {'method': "get_accounts"}
     resp = tryParseResponse(mPostRequest(data))
-    if 'Error' in result:
-        return result
+    if 'Error' in resp:
+        return resp
 
     return {"balance": resp['result']['total_balance'], "unlocked_balance": resp['result']['total_unlocked_balance']}
+

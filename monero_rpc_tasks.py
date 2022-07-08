@@ -45,7 +45,7 @@ def mVerifyBalance(requiredBalance, retryCount, waitSeconds):
         balance = result['unlocked_balance']
         logging.debug(f"Unlocked balance was {atomicToMonero(balance)}.")
         if balance >= atomicRequiredBalance:
-            return { "Balance" : balance }
+            return { "Balance" : atomicToMonero(balance) }
         tryCount += 1
         time.sleep(waitSeconds)
     return {"Error": f"Could not verify unlocked balance was {requiredBalance} after {retryCount} tries.\n{result}"}
@@ -65,3 +65,6 @@ def mTransfer(address, amount):
         return resp
 
     return True
+
+print(mVerifyBalance(0.09, 6, 5))
+

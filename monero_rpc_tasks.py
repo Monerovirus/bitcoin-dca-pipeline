@@ -66,5 +66,3 @@ def mTransfer(address, amount):
 
     return True
 
-print(mVerifyBalance(0.09, 6, 5))
-

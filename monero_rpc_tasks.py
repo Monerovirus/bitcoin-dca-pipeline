@@ -26,3 +26,19 @@ def mGetBalances():
         return resp
 
     return {"balance": resp['result']['total_balance'], "unlocked_balance": resp['result']['total_unlocked_balance']}
+
+def mTransfer(address, atomicAmount):
+    params = {
+        'destinations': [{'amount': atomicAmount, 'address': address}],
+        'priority': 1,
+        'unlock_time': 10
+        }
+    data = {
+        'method': "transfer",
+        'params': params
+        }
+    resp = tryParseResponse(mPostRequest(data))
+    if 'Error' in resp:
+        return resp
+
+    return True

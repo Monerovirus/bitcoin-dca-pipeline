@@ -71,7 +71,8 @@ def runTasks(amount):
 
     # create a fixedfloat order
     logging.info("Opening an order on FixedFloat.")
-    ffOrderData = ffCreateFloatOrder(fixedfloatFromCrypto, fixedFloatToCrypto, mBalance, finalCryptoAddress)
+    ffOrderAmount = mBalance - 0.01 # accounting for transfer fee
+    ffOrderData = ffCreateFloatOrder(fixedfloatFromCrypto, fixedFloatToCrypto, ffOrderAmount, finalCryptoAddress)
     if not succeeded(ffOrderData):
         return
 
@@ -82,8 +83,8 @@ def runTasks(amount):
     logging.info(f"Order {ffOrderId} created.")
 
     # transfer to fixedfloat
-    logging.info(f"Transferring {mBalance} to FixedFloat.")
-    result = mTransfer(fixedfloatAddress, mBalance)
+    logging.info(f"Transferring {ffOrderAmount} to FixedFloat.")
+    result = mTransfer(fixedfloatAddress, ffOrderAmount)
     if not succeeded(result):
         return
 

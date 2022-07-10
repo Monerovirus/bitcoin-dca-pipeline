@@ -1,7 +1,8 @@
 {
-  "kraken_crypto_name": "XXMR",
-  "kraken_fiat_name": "ZEUR",
-  "final_crypto_name": "BTC",
+  "kraken_crypto": "XXMR",
+  "kraken_fiat": "ZEUR",
+  "fixedfloat_from_crypto": "XMR",
+  "fixedfloat_to_crypto": "BTC",
   "transfer_crypto_address_key": "[address key here]",
   "final_crypto_address_key": "[address key here]"
 }

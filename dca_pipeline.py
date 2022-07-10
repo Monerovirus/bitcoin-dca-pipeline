@@ -35,33 +35,42 @@ def runTasks(amount):
     if not succeeded(result):
         return
 
+    logging.info(f"Price of {krakenCrypto} is {result}{fiat}.")
+
     volume = amount / float(result)
 
     # create an order for the crypto
+    logging.info(f"Attempting to buy {volume} {krakenCrypto}.")
     result = kCreateMarketBuyOrder(krakenCrypto, fiat, volume)
     if not succeeded(result):
         return
 
     # verify the order went through (1 minute intervals, 30 attempts)
+    logging.info(f"Verifying order...")
     result = kVerifyBalance(krakenCrypto, volume - 0.001, 30, 60)
     if not succeeded(result):
         return
 
     tCryptoBalance = result["Balance"]
+    logging.info(f"Successfully purchased {tCryptoBalance} {krakenCrypto}.")
 
     # withdraw the crypto to transitory wallet
+    logging.info(f"Attempting to withdraw {tCryptoBalance} {krakenCrypto}.")
     result = kWithdrawCrypto(krakenCrypto, tCryptoBalance, settings['transfer_crypto_address_key'])
     if not succeeded(result):
         return
 
     # verify the crypto made it to the wallet (1 minute intervals, 30 attempts)
+    logging.info(f"Verifying deposit...")
     result = mVerifyBalance(tCryptoBalance - 0.001, 30, 60)
     if not succeeded(result):
         return
 
     mBalance = float(result['Balance'])
+    logging.info(f"Successfully deposited, {mBalance} {krakenCrypto} available in wallet.")
 
     # create a fixedfloat order
+    logging.info("Opening an order on FixedFloat.")
     ffOrderData = ffCreateFloatOrder(fixedfloatFromCrypto, fixedFloatToCrypto, mBalance, finalCryptoAddress)
     if not succeeded(ffOrderData):
         return
@@ -70,12 +79,16 @@ def runTasks(amount):
     ffOrderToken = ffOrderData['token']
     ffOrderAddress = ffOrderData['from']['address']
 
+    logging.info(f"Order {ffOrderId} created.")
+
     # transfer to fixedfloat
+    logging.info(f"Transferring {mBalance} to FixedFloat.")
     result = mTransfer(fixedfloatAddress, mBalance)
     if not succeeded(result):
         return
 
     # wait for fixedfloat order to complete (1 minute intervals, 30 attempts)
+    logging.info("Verifying order...")
     result = ffVerifyOrderComplete(ffOrderId, ffOrderToken, 30, 60)
     if not succeeded(result):
         return

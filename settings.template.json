@@ -4,5 +4,5 @@
   "fixedfloat_from_crypto": "XMR",
   "fixedfloat_to_crypto": "BTC",
   "transfer_crypto_address_key": "[address key here]",
-  "final_crypto_address_key": "[address key here]"
+  "final_crypto_address": "[address key here]"
 }

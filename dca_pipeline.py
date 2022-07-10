@@ -25,7 +25,7 @@ def runTasks(amount):
     krakenCrypto = settings['kraken_crypto']
     fixedfloatFromCrypto = settings['fixedfloat_from_crypto']
     fixedfloatToCrypto = settings['fixedfloat_to_crypto']
-    finalCryptoAddress = settings['final_crypto_address_key']
+    finalCryptoAddress = settings['final_crypto_address']
     fiat = settings['kraken_fiat']
 
     pair = krakenCrypto + fiat

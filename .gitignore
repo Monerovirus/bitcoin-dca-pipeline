@@ -130,7 +130,7 @@ dmypy.json
 
 
 
-auth*.json
+auth.json
 log.txt
 github.access.txt
 settings.json

@@ -52,6 +52,31 @@ def kVerifyBalance(asset, requiredBalance, retryCount, waitSeconds):
         time.sleep(waitSeconds)
     return {"Error": f"Could not verify balance was {requiredBalance} after {retryCount} tries.\n{result}"}
 
+def kGetOrder(id_):
+    data = {
+        "txid": id_
+        }
+    resp = kAuthReq('/0/private/QueryOrders', data).json()
+    if successfulKrakenResponse(resp):
+        return resp['result'][id_]
+    return {"Error": resp['error']}
+
+def kVerifyOrder(id_, retryCount, waitSeconds):
+    tryCount = 0
+    result = None
+    while tryCount < retryCount:
+        logging.debug(f"Attempting verify order id {id_} completed.")
+        result = kGetOrder(id_)
+        if 'Error' in result:
+            return result
+        status = result['status']
+        logging.debug(f"Status was {status}.")
+        if status == "closed":
+            return result
+        tryCount += 1
+        time.sleep(waitSeconds)
+    return {"Error": f"Could not verify order id {id_} after {retryCount} tries.\n{result}"}
+
 def kCreateMarketBuyOrder(buyAsset, sellAsset, amount):
     data = {
         "ordertype": "market",
@@ -60,7 +85,7 @@ def kCreateMarketBuyOrder(buyAsset, sellAsset, amount):
         "volume": str(amount)
         }
     resp = kAuthReq('/0/private/AddOrder', data).json()
-    if successfulKrakenResponse:
+    if successfulKrakenResponse(resp):
         return resp['result']['descr']['order']
     return {"Error": resp['error']}
 

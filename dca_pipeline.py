@@ -62,7 +62,7 @@ def runTasks(amount):
 
     # verify the crypto made it to the wallet (2 minute intervals, 60 attempts)
     logging.info(f"Verifying deposit...")
-    result = mVerifyBalance(volume - 0.001, 60, 120)
+    result = mVerifyBalance(volume - 0.0001, 60, 120)
     if not succeeded(result):
         return
 
@@ -71,7 +71,7 @@ def runTasks(amount):
 
     # create a fixedfloat order
     logging.info("Opening an order on FixedFloat.")
-    ffOrderAmount = mBalance - 0.01 # accounting for transfer fee
+    ffOrderAmount = mBalance - 0.00005 # accounting for transfer fee
     ffOrderData = ffCreateFloatOrder(fixedfloatFromCrypto, fixedFloatToCrypto, ffOrderAmount, finalCryptoAddress)
     if not succeeded(ffOrderData):
         return

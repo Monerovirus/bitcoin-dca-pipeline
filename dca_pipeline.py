@@ -67,7 +67,7 @@ def runTasks(amount):
         return
 
     mBalance = float(result['Balance'])
-    logging.info(f"Successfully deposited, {mBalance} {krakenCrypto} available in wallet.")
+    logging.info(f"Successfully deposited {volume} {krakenCrypto}, {mBalance} {krakenCrypto} available in wallet.")
 
     # create a fixedfloat order
     logging.info("Opening an order on FixedFloat.")

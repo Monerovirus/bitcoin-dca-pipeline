@@ -86,7 +86,7 @@ def kCreateMarketBuyOrder(buyAsset, sellAsset, amount):
         }
     resp = kAuthReq('/0/private/AddOrder', data).json()
     if successfulKrakenResponse(resp):
-        return resp['result']['descr']['order']
+        return resp['result']['txid'][0]
     return {"Error": resp['error']}
 
 def kWithdrawCrypto(name, amount, addressName):

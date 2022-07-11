@@ -72,7 +72,7 @@ def runTasks(amount):
     # create a fixedfloat order
     logging.info("Opening an order on FixedFloat.")
     ffOrderAmount = mBalance - 0.00005 # accounting for transfer fee
-    ffOrderData = ffCreateFloatOrder(fixedfloatFromCrypto, fixedFloatToCrypto, ffOrderAmount, finalCryptoAddress)
+    ffOrderData = ffCreateFloatOrder(fixedfloatFromCrypto, fixedfloatToCrypto, ffOrderAmount, finalCryptoAddress)
     if not succeeded(ffOrderData):
         return
 

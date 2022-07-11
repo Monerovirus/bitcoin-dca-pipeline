@@ -1,6 +1,6 @@
 import math, os, sys, logging
 import json_io
-from kraken_tasks import kMarketPrice, kCreateMarketBuyOrder, kVerifyBalance, kWithdrawCrypto
+from kraken_tasks import kMarketPrice, kCreateMarketBuyOrder, kVerifyOrder, kWithdrawCrypto
 from monero_rpc_tasks import mVerifyBalance, mTransfer
 from fixedfloat_tasks import ffCreateFloatOrder, ffVerifyOrderComplete
 #from history_tasks import writeHistory
@@ -45,24 +45,24 @@ def runTasks(amount):
     if not succeeded(result):
         return
 
-    # verify the order went through (1 minute intervals, 30 attempts)
+    # verify the order went through (1 minute intervals, 20 attempts)
     logging.info(f"Verifying order...")
-    result = kVerifyBalance(krakenCrypto, volume - 0.001, 30, 60)
+    result = kVerifyOrder(result, 20, 60)
     if not succeeded(result):
         return
 
-    tCryptoBalance = result["Balance"]
-    logging.info(f"Successfully purchased {tCryptoBalance} {krakenCrypto}.")
+    volume = float(result["vol_exec"])
+    logging.info(f"Successfully purchased {volume} {krakenCrypto}.")
 
     # withdraw the crypto to transitory wallet
-    logging.info(f"Attempting to withdraw {tCryptoBalance} {krakenCrypto}.")
-    result = kWithdrawCrypto(krakenCrypto, tCryptoBalance, settings['transfer_crypto_address_key'])
+    logging.info(f"Attempting to withdraw {volume} {krakenCrypto}.")
+    result = kWithdrawCrypto(krakenCrypto, volume, settings['transfer_crypto_address_key'])
     if not succeeded(result):
         return
 
     # verify the crypto made it to the wallet (2 minute intervals, 60 attempts)
     logging.info(f"Verifying deposit...")
-    result = mVerifyBalance(tCryptoBalance - 0.001, 60, 120)
+    result = mVerifyBalance(volume - 0.001, 60, 120)
     if not succeeded(result):
         return
 

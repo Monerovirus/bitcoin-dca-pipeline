@@ -91,7 +91,7 @@ def runTasks(amount):
 
     # transfer to fixedfloat
     logging.info(f"Transferring {ffOrderAmount} to FixedFloat.")
-    result = mTransfer(fixedfloatAddress, ffOrderAmount)
+    result = mTransfer(ffOrderAddress, ffOrderAmount)
     if not succeeded(result):
         return
 

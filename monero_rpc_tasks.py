@@ -31,10 +31,12 @@ def mGetBalances():
     if 'Error' in resp:
         return resp
 
-    return {"balance": resp['result']['total_balance'], "unlocked_balance": resp['result']['total_unlocked_balance']}
+    balance = atomicToMonero(resp['result']['total_balance'])
+    unlockedBalance = atomicToMonero(resp['result']['total_unlocked_balance'])
+
+    return {"balance": balance, "unlocked_balance": unlockedBalance}
 
 def mVerifyBalance(requiredBalance, retryCount, waitSeconds):
-    atomicRequiredBalance = moneroToAtomic(requiredBalance)
     tryCount = 0
     result = None
     while tryCount < retryCount:
@@ -43,9 +45,9 @@ def mVerifyBalance(requiredBalance, retryCount, waitSeconds):
         if 'Error' in result:
             return result
         balance = result['unlocked_balance']
-        logging.debug(f"Unlocked balance was {atomicToMonero(balance)}.")
-        if balance >= atomicRequiredBalance:
-            return { "Balance" : atomicToMonero(balance) }
+        logging.debug(f"Unlocked balance was {balance}.")
+        if balance >= requiredBalance:
+            return { "Balance" : balance }
         tryCount += 1
         time.sleep(waitSeconds)
     return {"Error": f"Could not verify unlocked balance was {requiredBalance} after {retryCount} tries.\n{result}"}

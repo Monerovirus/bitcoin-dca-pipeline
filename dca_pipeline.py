@@ -69,7 +69,7 @@ def runTasks(amount):
 
     # verify the crypto made it to the wallet (2 minute intervals, 60 attempts)
     logging.info(f"Verifying deposit...")
-    result = mVerifyBalance(mOldBalance + volume - 0.0001, 60, 120)
+    result = mVerifyBalance(mOldBalance + volume - 0.001, 60, 120)
     if not succeeded(result):
         return
 

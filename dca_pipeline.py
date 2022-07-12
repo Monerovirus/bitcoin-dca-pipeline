@@ -1,7 +1,7 @@
 import math, os, sys, logging
 import json_io
 from kraken_tasks import kMarketPrice, kCreateMarketBuyOrder, kVerifyOrder, kWithdrawCrypto
-from monero_rpc_tasks import mVerifyBalance, mTransfer
+from monero_rpc_tasks import mVerifyBalance, mTransfer, mGetBalances
 from fixedfloat_tasks import ffCreateFloatOrder, ffVerifyOrderComplete
 #from history_tasks import writeHistory
 
@@ -54,6 +54,13 @@ def runTasks(amount):
     volume = float(result["vol_exec"])
     logging.info(f"Successfully purchased {volume} {krakenCrypto}.")
 
+    logging.info(f"Getting current {krakenCrypto} wallet balance.")
+    result = mGetBalances()
+    if not succeeded(result):
+        return
+    mOldBalance = result['unlocked_balance']
+    logging.info(f"Old balance was {mOldBalance}.")
+
     # withdraw the crypto to transitory wallet
     logging.info(f"Attempting to withdraw {volume} {krakenCrypto}.")
     result = kWithdrawCrypto(krakenCrypto, volume, settings['transfer_crypto_address_key'])
@@ -62,7 +69,7 @@ def runTasks(amount):
 
     # verify the crypto made it to the wallet (2 minute intervals, 60 attempts)
     logging.info(f"Verifying deposit...")
-    result = mVerifyBalance(volume - 0.0001, 60, 120)
+    result = mVerifyBalance(mOldBalance + volume - 0.0001, 60, 120)
     if not succeeded(result):
         return
 

@@ -62,9 +62,4 @@ def mTransfer(address, amount):
         'method': "transfer",
         'params': params
         }
-    resp = tryParseResponse(postRequest(data))
-    if 'Error' in resp:
-        return resp
-
-    return True
-
+    return tryParseResponse(postRequest(data))
